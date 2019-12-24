@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 
 class f:
@@ -28,7 +29,7 @@ class f:
                     self.total = self.total+1
                 if lv != self.end-1:
                     # 還原限制條件
-                    self.walk(lv, i, -1) 
+                    self.walk(lv, i, -1)
 
                 self.map[lv][i] = -1
                 self.star[lv][i] = '*'
@@ -44,6 +45,7 @@ class f:
                 self.map[x+i][y-i] = ch
 
     def show(self):
+        return
         for i in range(self.end):
             buff = ''
             for x in range(self.end):
@@ -55,12 +57,17 @@ class f:
             print(buff)
         print('')
 
+
 print(sys.argv)
 if len(sys.argv) == 2:
     how = int(sys.argv[1])
 else:
-    how = int(input(' ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  == \nHow many Q:'))
+    how = int(
+        input(' ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  ==  == \nHow many Q:'))
 print('')
 x = f(how)
+StartTime = time.time()
 x.count(0)
+EndTime = time.time()
 print(how, '階方陣總共為', x.total, '種解答')
+print(f'共耗時 {round(EndTime - StartTime, 1)} 秒')
