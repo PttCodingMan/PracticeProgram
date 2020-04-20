@@ -1,47 +1,29 @@
+import sys
 import time
-
-
-def _get_terminal_size_windows():
-    try:
-        from ctypes import windll, create_string_buffer
-        import struct
-
-        # stdin handle is -10
-        # stdout handle is -11
-        # stderr handle is -12
-        h = windll.kernel32.GetStdHandle(-12)
-        csbi = create_string_buffer(22)
-        res = windll.kernel32.GetConsoleScreenBufferInfo(h, csbi)
-        if res:
-            (bufx, bufy, curx, cury, wattr,
-             left, top, right, bottom,
-             maxx, maxy) = struct.unpack("hhhhHhhhhhh", csbi.raw)
-            sizex = right - left + 1
-            sizey = bottom - top + 1
-            return sizex, sizey
-    except:
-        pass
+import window_size
 
 
 class Map:
     def __init__(self, init_list=None):
-        x, y = _get_terminal_size_windows()
+        x, y = window_size.get_terminal_size()
 
         self.x = int(x / 2)
         self.y = int(y - 2)
 
         self.map = []
-        sub_map1 = [[0 for i in range(self.x)] for j in range(self.y)]
-        sub_map2 = [[0 for i in range(self.x)] for j in range(self.y)]
 
-        self.map.append(sub_map1)
-        self.map.append(sub_map2)
+        self.map.append([[0 for i in range(self.x)] for j in range(self.y)])
+        self.map.append([[0 for i in range(self.x)] for j in range(self.y)])
 
         self.map_index = 0
 
         if init_list is not None:
             for y, x in init_list:
-                self.map[self.map_index][y][x] = 1
+                try:
+                    self.map[self.map_index][y][x] = 1
+                except IndexError:
+                    print('Console is too small, please make console bigger')
+                    sys.exit()
 
     def get_fixed_y(self, new_y):
         if new_y < 0:
