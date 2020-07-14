@@ -1,10 +1,9 @@
-from cell import Cell
+import util
 
 
 class Line:
     def __init__(self, cell_list: list):
-        if len(cell_list) != 9:
-            raise ValueError('cell list length must be 9')
+        util.check_value_count('Line', cell_list)
 
         self.cell_list = cell_list
 
@@ -18,6 +17,9 @@ class Line:
 
 
 if __name__ == '__main__':
+
+    from cell import Cell
+
     cell_list = list()
     for v in range(1, 10):
         cell_list.append(Cell(v))
