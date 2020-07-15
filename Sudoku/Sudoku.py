@@ -110,14 +110,12 @@ class Sudoku:
         self.find_only_answer()
 
     def set_value(self, y, x, value):
-        result = Cell.NOT_FIND
-        set_result = self.row_line[y].set_value(x, value)
+        result = Cell.OK
+        set_result = self.row_line[y].set_value(self, x, value)
         if set_result == Cell.CONTRADICT:
             return set_result
-        if set_result == Cell.FIND:
-            result = set_result
 
-        set_result = self.column_line[x].set_value(y, value)
+        set_result = self.column_line[x].set_value(self, y, value)
         if set_result == Cell.CONTRADICT:
             return set_result
         if set_result == Cell.FIND:
@@ -130,7 +128,7 @@ class Sudoku:
         pos_x = int(x % 3)
         pos = pos_y * 3 + pos_x
 
-        set_result = self.jiugongge_list[index].set_value(pos, value)
+        set_result = self.jiugongge_list[index].set_value(self, pos, value)
         if set_result == Cell.CONTRADICT:
             return set_result
         if set_result == Cell.FIND:
@@ -155,6 +153,7 @@ class Sudoku:
         self.jiugongge_list = answer_map.jiugongge_list
 
     def recursive_search(self):
+
         print('================')
         min_degree = 10
         min_cell = None
@@ -171,8 +170,9 @@ class Sudoku:
         # print(min_cell.y, min_cell.x)
         # print(min_cell.possible_value)
 
+
         for possible_value in min_cell.possible_value:
-            # print(possible_value)
+            print('possible_value', possible_value)
             map = copy.deepcopy(self)
             # print(map.cell_map[4][0].possible_value)
             # print(map.cell_map[4][2].possible_value)
@@ -185,8 +185,6 @@ class Sudoku:
             # if map.contradicted:
             #     # print('contradicted')
             #     continue
-            if self.answer is not None:
-                return
             if map.finish():
                 # self.answer = copy.deepcopy(map)
                 return map
@@ -194,13 +192,13 @@ class Sudoku:
             # print(map)
             # print(map.cell_map[4][0].possible_value)
             # print(map.cell_map[4][2].possible_value)
-            break
-            # map = map.recursive_search()
-            # if map is None:
-            #     continue
-            # if map.finish():
-            #     # self.answer = copy.deepcopy(map)
-            #     return map
+
+            map = map.recursive_search()
+            if map is None:
+                continue
+            if map.finish():
+                # self.answer = copy.deepcopy(map)
+                return map
 
         return None
 
@@ -263,7 +261,7 @@ if __name__ == '__main__':
 '''
     value_2 = value_2.replace('2', '0')
     # value = '0' * 81
-    map = Sudoku(value=value_2)
+    map = Sudoku(value=value_1)
     print(map)
 
     if not map.check():

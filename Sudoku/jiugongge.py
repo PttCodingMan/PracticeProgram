@@ -25,14 +25,13 @@ class Jiugongge:
             if remove_result == Cell.CONTRADICT:
                 return Cell.CONTRADICT
 
-    def set_value(self, pos, value):
-        result = Cell.NOT_FIND
+    def set_value(self, map, pos, value):
+        result = Cell.OK
         for i, cell in enumerate(self.cell_list):
             if i == pos:
                 continue
-            find_result = cell.remove_possible_value(value)
+            find_result = cell.remove_possible_value(map, value)
             if find_result == Cell.CONTRADICT:
                 return find_result
-            if find_result == Cell.FIND:
-                result = find_result
+
         return result
