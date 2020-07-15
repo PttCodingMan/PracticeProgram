@@ -106,11 +106,26 @@ class Sudoku:
 
         index = int(y / 3) * 3 + int(x / 3)
 
+        if cell.y == 6 and cell.x == 7:
+            print('remove_possible_value! 6 7', cell.value)
+            print('index', index)
+        # if cell.y == 8 and cell.x == 7:
+        #     print('remove_possible_value! 8 7', cell.value)
+        #     print('index', index)
+
+            for cell in self.jiugongge_list[index].cell_list:
+                print(cell.value)
+
         self.jiugongge_list[index].remove_possible_value(self, cell.value)
         self.find_only_answer()
 
     def set_value(self, y, x, value):
         result = Cell.OK
+
+        # print('QQQ', self.cell_map[y][x].value)
+
+        self.cell_map[y][x].set_value(self, value)
+
         set_result = self.row_line[y].set_value(self, x, value)
         if set_result == Cell.CONTRADICT:
             return set_result
@@ -133,8 +148,10 @@ class Sudoku:
             return set_result
         if set_result == Cell.FIND:
             result = set_result
-
-        self.cell_map[y][x].set_value(value)
+        #
+        # self.cell_map[y][x].set_value(self, value)
+        # print('6,2', map.cell_map[6][2].possible_value)
+        # print('7,2', map.cell_map[7][2].possible_value)
 
         return result
 
@@ -170,14 +187,18 @@ class Sudoku:
         # print(min_cell.y, min_cell.x)
         # print(min_cell.possible_value)
 
-
+        # print(self)
+        # print(self.empty_cell)
         for possible_value in min_cell.possible_value:
-            print('possible_value', possible_value)
+            print('possible_value', min_cell.y, min_cell.x, possible_value)
             map = copy.deepcopy(self)
-            # print(map.cell_map[4][0].possible_value)
-            # print(map.cell_map[4][2].possible_value)
             # map.cell_map[min_cell.y][min_cell.x].set_value(possible_value)
+            # print('=================================')
+            # print(min_cell.value)
+            # print(min_cell.y, min_cell.x)
+            # print('min_cell.value', min_cell.value)
             set_result = map.set_value(min_cell.y, min_cell.x, possible_value)
+            # print('=================================')
             if set_result == Cell.CONTRADICT:
                 continue
             if set_result == Cell.FIND:
