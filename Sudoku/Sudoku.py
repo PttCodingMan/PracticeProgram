@@ -98,9 +98,7 @@ class Sudoku:
         # 1. count cells possible values
         # 2. if number of possible value == 1
         #       set_value
-        result = self.count_possible_value()
-        if result != Cell.FIND:
-            return
+        #       remove value from the possible value of other cell
 
         find = True
         while find:
@@ -117,11 +115,14 @@ class Sudoku:
                         result = self.remove_possible_value(cell)
                         if result == Cell.CONTRADICT:
                             self.contradicted = True
-                            return Cell.CONTRADICT
+                            return
                     if self.finish():
                         return
 
     def remove_possible_value(self, cell):
+
+        # remove possible value from the relative cell
+
         y = cell.y
         x = cell.x
 
@@ -150,6 +151,7 @@ class Sudoku:
     def search(self):
         if self.finish():
             return
+        self.count_possible_value()
         self.find_only_answer()
         if self.finish():
             return
@@ -176,7 +178,13 @@ class Sudoku:
 
         for possible_value in min_cell.possible_value:
             map = copy.deepcopy(self)
-            map.cell_map[min_cell.y][min_cell.x].set_value(map, possible_value)
+
+            cell = map.cell_map[min_cell.y][min_cell.x]
+            cell.set_value(map, possible_value)
+            result = map.remove_possible_value(cell)
+            if result == Cell.CONTRADICT:
+                continue
+
             map.find_only_answer()
             if map.contradicted:
                 continue
