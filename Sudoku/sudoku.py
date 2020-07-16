@@ -8,7 +8,7 @@ from jiugongge import Jiugongge
 
 
 class Sudoku:
-    def __init__(self, value: str = None, obj=None):
+    def __init__(self, value: str):
         if value is not None:
             value = value.strip()
             value = value.replace('\n', '')
@@ -213,11 +213,11 @@ class Sudoku:
                 buffer += '---|' * 9 + '\n'
             else:
                 buffer += ' - |' * 9 + '\n'
-        for y in range(9):
-            line = ''
-            for x in range(9):
-                line = f'{line}{self.cell_map[y][x].value}'
-            buffer = f'{buffer}\n{line}'
+        # for y in range(9):
+        #     line = ''
+        #     for x in range(9):
+        #         line = f'{line}{self.cell_map[y][x].value}'
+        #     buffer = f'{buffer}\n{line}'
         return buffer
 
 
@@ -225,7 +225,7 @@ if __name__ == '__main__':
 
     import time
 
-    value_1 = '''
+    topic_1 = '''
 000015600
 000060850
 000000003
@@ -236,7 +236,7 @@ if __name__ == '__main__':
 000800090
 006040000
 '''
-    value_2 = '''
+    topic_2 = '''
 534678912
 672195348
 198342567
@@ -247,10 +247,9 @@ if __name__ == '__main__':
 287419635
 345286170
 '''
-    value_2 = value_2.replace('2', '0')
-    value = '0' * 81
+    topic_empty = '0' * 81
 
-    value_3 = '''
+    topic_3 = '''
 530070000
 600195000
 098000060
@@ -261,9 +260,9 @@ if __name__ == '__main__':
 000419005
 000080079    
 '''
-    hardest = '''800000000003600000070090200050007000000045700000100030001000068008500010090000400'''
+    topic_hardest = '''800000000003600000070090200050007000000045700000100030001000068008500010090000400'''
 
-    map = Sudoku(value=hardest)
+    map = Sudoku(value=topic_hardest)
     print(map)
 
     if not map.check():
