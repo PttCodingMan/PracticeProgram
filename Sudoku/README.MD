@@ -18,7 +18,7 @@ topic = '''
 000080079    
 '''
 
-map = Sudoku(value=topic)
+map = Sudoku(topic)
 print(map)
 
 if not map.check():
