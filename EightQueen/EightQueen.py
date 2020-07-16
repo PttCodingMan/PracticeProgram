@@ -18,16 +18,16 @@ class f:
             if self.map[lv][i] == -1:
                 # take this point
                 self.map[lv][i] = lv
-                if lv != self.end-1:
+                if lv != self.end - 1:
                     # 展開限制條件
                     self.walk(lv, i, lv)
                 self.star[lv][i] = 'Q'
                 # recursive next
-                self.count(lv+1)
-                if lv == self.end-1:
+                self.count(lv + 1)
+                if lv == self.end - 1:
                     self.show()
-                    self.total = self.total+1
-                if lv != self.end-1:
+                    self.total = self.total + 1
+                if lv != self.end - 1:
                     # 還原限制條件
                     self.walk(lv, i, -1)
 
@@ -39,13 +39,15 @@ class f:
         for i in range(self.end):
             if i != x and (self.map[i][y] == -1 or self.map[i][y] == self.map[x][y]):
                 self.map[i][y] = ch
-            if (not (x+i >= self.end or y+i >= self.end))and (not i == 0) and (self.map[x+i][y+i] == -1 or self.map[x+i][y+i] == self.map[x][y]):
-                self.map[x+i][y+i] = ch
-            if x+i < self.end and i != 0 and y-i >= 0 and (self.map[x+i][y-i] == -1 or self.map[x+i][y-i] == self.map[x][y]):
-                self.map[x+i][y-i] = ch
+            if (not (x + i >= self.end or y + i >= self.end)) and (not i == 0) and (
+                    self.map[x + i][y + i] == -1 or self.map[x + i][y + i] == self.map[x][y]):
+                self.map[x + i][y + i] = ch
+            if x + i < self.end and i != 0 and y - i >= 0 and (
+                    self.map[x + i][y - i] == -1 or self.map[x + i][y - i] == self.map[x][y]):
+                self.map[x + i][y - i] = ch
 
     def show(self):
-        return
+        # return
         for i in range(self.end):
             buff = ''
             for x in range(self.end):
