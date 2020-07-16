@@ -78,69 +78,72 @@ class Sudoku:
         map.find_only_answer()
         return not map.contradicted
 
+    def count_possible_value(self):
+        result = Cell.OK
+        for y in range(9):
+            for x in range(9):
+                cell = self.cell_map[y][x]
+                if cell.value == 0:
+                    continue
+                remove_result = self.remove_possible_value(cell)
+                if remove_result == Cell.CONTRADICT:
+                    self.contradicted = True
+                    return
+                if remove_result == Cell.FIND:
+                    result = Cell.FIND
+        return result
+
     def find_only_answer(self):
 
-        if self.finish():
+        # 1. count cells possible values
+        # 2. if number of possible value == 1
+        #       set_value
+        result = self.count_possible_value()
+        if result != Cell.FIND:
             return
 
-        for line in self.row_line:
-            find_result = line.find_only_value()
-            if find_result == Cell.CONTRADICT:
-                self.contradicted = True
-                return
+        find = True
+        while find:
+            find = False
+            for y in range(9):
+                for x in range(9):
+                    cell = self.cell_map[y][x]
+                    if cell.value != 0:
+                        continue
+                    if len(self.cell_map[y][x].possible_value) == 1:
+                        find = True
+                        cell.set_value(self, self.cell_map[y][x].possible_value[0])
 
-        for line in self.column_line:
-            find_result = line.find_only_value()
-            if find_result == Cell.CONTRADICT:
-                self.contradicted = True
-                return
-
-        for jiugongge in self.jiugongge_list:
-            find_result = jiugongge.find_only_value()
-            if find_result == Cell.CONTRADICT:
-                self.contradicted = True
-                return
-
-
+                        result = self.remove_possible_value(cell)
+                        if result == Cell.CONTRADICT:
+                            self.contradicted = True
+                            return Cell.CONTRADICT
+                    if self.finish():
+                        return
 
     def remove_possible_value(self, cell):
         y = cell.y
         x = cell.x
 
-        self.row_line[y].remove_possible_value(self, cell.value)
-        self.column_line[x].remove_possible_value(self, cell.value)
-
-        index = int(y / 3) * 3 + int(x / 3)
-        self.jiugongge_list[index].remove_possible_value(self, cell.value)
-
-    def set_value(self, y, x, value):
         result = Cell.OK
 
-        self.cell_map[y][x].set_value(self, value)
-
-        set_result = self.row_line[y].set_value(x, value)
-        if set_result == Cell.CONTRADICT:
-            return set_result
-        if set_result == Cell.FIND:
-            result = set_result
-
-        set_result = self.column_line[x].set_value(y, value)
-        if set_result == Cell.CONTRADICT:
-            return set_result
-        if set_result == Cell.FIND:
-            result = set_result
+        remove_result = self.row_line[y].remove_possible_value(cell.value)
+        if remove_result == Cell.CONTRADICT:
+            return Cell.CONTRADICT
+        if remove_result == Cell.FIND:
+            result = Cell.FIND
+        remove_result = self.column_line[x].remove_possible_value(cell.value)
+        if remove_result == Cell.CONTRADICT:
+            return Cell.CONTRADICT
+        if remove_result == Cell.FIND:
+            result = Cell.FIND
 
         index = int(y / 3) * 3 + int(x / 3)
-
-        pos_y = y % 3
-        pos_x = x % 3
-        pos = pos_y * 3 + pos_x
-
-        set_result = self.jiugongge_list[index].set_value(pos, value)
-        if set_result == Cell.CONTRADICT:
-            return set_result
-        if set_result == Cell.FIND:
-            result = set_result
+        remove_result = self.jiugongge_list[index].remove_possible_value(cell.value)
+        if remove_result == Cell.CONTRADICT:
+            return Cell.CONTRADICT
+        if remove_result == Cell.FIND:
+            result = Cell.FIND
 
         return result
 
@@ -160,9 +163,6 @@ class Sudoku:
         self.jiugongge_list = answer_map.jiugongge_list
 
     def recursive_search(self):
-
-        # self.find_only_answer()
-
         min_degree = 10
         min_cell = None
 
@@ -174,18 +174,12 @@ class Sudoku:
                     min_degree = len(cell.possible_value)
                     min_cell = cell
 
-        print(len(min_cell.possible_value), min_cell.possible_value)
         for possible_value in min_cell.possible_value:
             map = copy.deepcopy(self)
-            # map = json.loads(json.dumps(self))
-            # map = Sudoku(obj=self)
-            set_result = map.set_value(min_cell.y, min_cell.x, possible_value)
-            if set_result == Cell.CONTRADICT:
+            map.cell_map[min_cell.y][min_cell.x].set_value(map, possible_value)
+            map.find_only_answer()
+            if map.contradicted:
                 continue
-            if set_result == Cell.FIND:
-                map.find_only_answer()
-                if map.contradicted:
-                    continue
 
             if map.finish():
                 return map
@@ -272,13 +266,5 @@ if __name__ == '__main__':
     map.search()
     end_time = time.time()
     print(map)
-
     total_time = end_time - start_time
-
     print(f'共耗費時間 %.2f 秒' % total_time)
-
-    # for y in range(9):
-    #     for x in range(9):
-    #         if map.cell_map[y][x].value != 0:
-    #             continue
-    #         print(map.cell_map[y][x].possible_value)
