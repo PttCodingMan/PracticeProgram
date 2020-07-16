@@ -8,69 +8,71 @@ from jiugongge import Jiugongge
 
 
 class Sudoku:
-    def __init__(self, value: str):
-        if value is not None:
-            value = value.strip()
-            value = value.replace('\n', '')
-            if len(value) != 81:
-                print(len(value))
-                raise ValueError('Input length must be 81')
+    def __init__(self, topic: str):
+        if isinstance(topic, str):
+            topic = topic.strip()
+            topic = topic.replace('\n', '')
+            topic = topic.replace(' ', '')
+        if isinstance(topic, str) or isinstance(topic[0], str):
+            topic = [int(x) for x in topic]
 
-            self.cell_map = list()
-            self.row_line = list()
-            self.empty_cell = 81
+        if len(topic) != 81:
+            print(len(topic))
+            raise ValueError('Topic length must be 81')
 
-            for i, v in enumerate(value):
-                y = int(i / 9)
-                x = i % 9
-                if x == 0:
-                    temp_list = list()
-                current_cell = Cell(self, y, x, int(v))
+        self.cell_map = list()
+        self.row_line = list()
+        self.empty_cell = 81
 
-                temp_list.append(current_cell)
-
-                if x == 8:
-                    self.cell_map.append(temp_list)
-                    current_list = Line(temp_list)
-                    self.row_line.append(current_list)
-
-            self.column_line = list()
-
-            for i in range(9):
+        for i, v in enumerate(topic):
+            y = int(i / 9)
+            x = i % 9
+            if x == 0:
                 temp_list = list()
-                for line in self.row_line:
-                    temp_list.append(line.cell_list[i])
-                    # print(line.cell_list[i])
+            current_cell = Cell(self, y, x, int(v))
+
+            temp_list.append(current_cell)
+
+            if x == 8:
+                self.cell_map.append(temp_list)
                 current_list = Line(temp_list)
-                self.column_line.append(current_list)
+                self.row_line.append(current_list)
 
-            self.jiugongge_list = list()
-            for y in range(0, 9, 3):
-                for x in range(0, 9, 3):
-                    # print('=' * 20)
-                    # print(y, x)
+        self.column_line = list()
 
-                    current_list = list()
+        for i in range(9):
+            temp_list = list()
+            for line in self.row_line:
+                temp_list.append(line.cell_list[i])
+                # print(line.cell_list[i])
+            current_list = Line(temp_list)
+            self.column_line.append(current_list)
 
-                    current_list.append(self.cell_map[y][x + 0])
-                    current_list.append(self.cell_map[y][x + 1])
-                    current_list.append(self.cell_map[y][x + 2])
+        self.jiugongge_list = list()
+        for y in range(0, 9, 3):
+            for x in range(0, 9, 3):
+                # print('=' * 20)
+                # print(y, x)
 
-                    current_list.append(self.cell_map[y + 1][x + 0])
-                    current_list.append(self.cell_map[y + 1][x + 1])
-                    current_list.append(self.cell_map[y + 1][x + 2])
+                current_list = list()
 
-                    current_list.append(self.cell_map[y + 2][x + 0])
-                    current_list.append(self.cell_map[y + 2][x + 1])
-                    current_list.append(self.cell_map[y + 2][x + 2])
+                current_list.append(self.cell_map[y][x + 0])
+                current_list.append(self.cell_map[y][x + 1])
+                current_list.append(self.cell_map[y][x + 2])
 
-                    current_jiugongge = Jiugongge(current_list)
+                current_list.append(self.cell_map[y + 1][x + 0])
+                current_list.append(self.cell_map[y + 1][x + 1])
+                current_list.append(self.cell_map[y + 1][x + 2])
 
-                    self.jiugongge_list.append(current_jiugongge)
+                current_list.append(self.cell_map[y + 2][x + 0])
+                current_list.append(self.cell_map[y + 2][x + 1])
+                current_list.append(self.cell_map[y + 2][x + 2])
 
-            self.contradicted = False
-        # else:
-        #     self.cell_map = json.loads(json.dumps(obj.cell_map))
+                current_jiugongge = Jiugongge(current_list)
+
+                self.jiugongge_list.append(current_jiugongge)
+
+        self.contradicted = False
 
     def check(self):
 
@@ -116,8 +118,8 @@ class Sudoku:
                         if result == Cell.CONTRADICT:
                             self.contradicted = True
                             return
-                    if self.finish():
-                        return
+                        if self.finish():
+                            return
 
     def remove_possible_value(self, cell):
 
@@ -168,6 +170,7 @@ class Sudoku:
         min_degree = 10
         min_cell = None
 
+        # Find the cell with the least number of possible_value
         for cell_list in self.cell_map:
             for cell in cell_list:
                 if cell.value != 0:
@@ -262,7 +265,7 @@ if __name__ == '__main__':
 '''
     topic_hardest = '''800000000003600000070090200050007000000045700000100030001000068008500010090000400'''
 
-    map = Sudoku(value=topic_hardest)
+    map = Sudoku(topic_1)
     print(map)
 
     if not map.check():

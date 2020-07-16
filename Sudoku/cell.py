@@ -1,18 +1,9 @@
 class Cell:
-
-    # 1. find only one possible value
-    # 2. if find, remove the value from relative line and jiugongge
-    # 3. goto 1.
-
-    # 1. find min degree cell
-    # 2. try the possible values on new map
-    # 3. run find only one possible value
-
     OK = -1
     FIND = -2
     CONTRADICT = -3
 
-    def __init__(self, map, y, x, value: int = 0):
+    def __init__(self, sudoku, y, x, value: int = 0):
 
         self.y = y
         self.x = x
@@ -25,7 +16,7 @@ class Cell:
         if value == 0:
             self.possible_value = [x for x in range(1, 10)]
         else:
-            map.empty_cell -= 1
+            sudoku.empty_cell -= 1
             self.possible_value = list()
 
     def __str__(self):
@@ -42,7 +33,7 @@ class Cell:
                 return self.CONTRADICT
         return self.OK
 
-    def set_value(self, map, value):
+    def set_value(self, sudoku, value):
         if value not in self.possible_value:
             print(self.value)
             print(self.possible_value)
@@ -51,7 +42,7 @@ class Cell:
         self.value = value
         self.possible_value.clear()
 
-        map.empty_cell -= 1
+        sudoku.empty_cell -= 1
 
 
 if __name__ == '__main__':
