@@ -35,12 +35,13 @@ class Line:
         if 1 not in value_list:
             return result
         for i, count in enumerate(value_list):
-            if count == 1:
-                for cell in self.cell_list:
-                    if i in cell.possible_value:
-                        result.append((cell, i))
-                        break
-                break
+            if count != 1:
+                continue
+            for cell in self.cell_list:
+                if i in cell.possible_value:
+                    result.append((cell, i))
+                    break
+            break
         return result
 
     def __str__(self):

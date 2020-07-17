@@ -216,25 +216,25 @@ class Sudoku:
                     min_cell = cell
 
         for possible_value in min_cell.possible_value:
-            map = copy.deepcopy(self)
+            sudoku = copy.deepcopy(self)
 
-            cell = map.cell_map[min_cell.y][min_cell.x]
-            cell.set_value(map, possible_value)
-            result = map.remove_possible_value(cell)
+            cell = sudoku.cell_map[min_cell.y][min_cell.x]
+            cell.set_value(sudoku, possible_value)
+            result = sudoku.remove_possible_value(cell)
             if result == Cell.CONTRADICT:
                 continue
 
-            map.find_only_answer()
-            if map.contradicted:
+            sudoku.find_only_answer()
+            if sudoku.contradicted:
                 continue
 
-            if map.finish():
-                return map
-            map = map.recursive_search()
-            if map is None:
+            if sudoku.finish():
+                return sudoku
+            sudoku = sudoku.recursive_search()
+            if sudoku is None:
                 continue
 
-            return map
+            return sudoku
 
         return None
 
@@ -299,9 +299,21 @@ if __name__ == '__main__':
 000419005
 000080079    
 '''
-    topic_hardest = '''800000000003600000070090200050007000000045700000100030001000068008500010090000400'''
+    topic_hardest_1 = '''800000000003600000070090200050007000000045700000100030001000068008500010090000400'''
 
-    map = Sudoku(topic_hardest)
+    topic_hardest_2 = '''
+005300000
+800000020
+070010500
+400005300
+010070006
+003200080
+060500009
+004000030
+000009700
+'''
+
+    map = Sudoku(topic_hardest_2)
     print(map)
 
     if not map.check():
