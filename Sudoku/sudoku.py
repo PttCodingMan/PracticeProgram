@@ -110,9 +110,9 @@ class Sudoku:
                     cell = self.cell_map[y][x]
                     if cell.value != 0:
                         continue
-                    if len(self.cell_map[y][x].possible_value) == 1:
+                    if len(cell.possible_value) == 1:
                         find = True
-                        cell.set_value(self, self.cell_map[y][x].possible_value[0])
+                        cell.set_value(self, cell.possible_value[0])
 
                         result = self.remove_possible_value(cell)
                         if result == Cell.CONTRADICT:
@@ -120,6 +120,42 @@ class Sudoku:
                             return
                         if self.finish():
                             return
+
+            for line in self.row_line:
+                cell_list = line.find_only_value()
+                for cell, only_value in cell_list:
+                    find = True
+                    cell.set_value(self, only_value)
+                    result = self.remove_possible_value(cell)
+                    if result == Cell.CONTRADICT:
+                        self.contradicted = True
+                        return
+                if self.finish():
+                    return
+
+            for line in self.column_line:
+                cell_list = line.find_only_value()
+                for cell, only_value in cell_list:
+                    find = True
+                    cell.set_value(self, only_value)
+                    result = self.remove_possible_value(cell)
+                    if result == Cell.CONTRADICT:
+                        self.contradicted = True
+                        return
+                if self.finish():
+                    return
+
+            for jiugongge in self.jiugongge_list:
+                cell_list = jiugongge.find_only_value()
+                for cell, only_value in cell_list:
+                    find = True
+                    cell.set_value(self, only_value)
+                    result = self.remove_possible_value(cell)
+                    if result == Cell.CONTRADICT:
+                        self.contradicted = True
+                        return
+                if self.finish():
+                    return
 
     def remove_possible_value(self, cell):
 
@@ -265,7 +301,7 @@ if __name__ == '__main__':
 '''
     topic_hardest = '''800000000003600000070090200050007000000045700000100030001000068008500010090000400'''
 
-    map = Sudoku(topic_1)
+    map = Sudoku(topic_hardest)
     print(map)
 
     if not map.check():
