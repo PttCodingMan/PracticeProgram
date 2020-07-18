@@ -122,38 +122,44 @@ class Sudoku:
                             return
 
             for line in self.row_line:
-                cell_list = line.find_only_value()
-                for cell, only_value in cell_list:
-                    find = True
-                    cell.set_value(self, only_value)
-                    result = self.remove_possible_value(cell)
-                    if result == Cell.CONTRADICT:
-                        self.contradicted = True
-                        return
+                cell, only_value = line.find_only_value()
+                if cell is None:
+                    continue
+                # print(f'row line find ({cell.y}, {cell.x}) {only_value}')
+                find = True
+                cell.set_value(self, only_value)
+                result = self.remove_possible_value(cell)
+                if result == Cell.CONTRADICT:
+                    self.contradicted = True
+                    return
                 if self.finish():
                     return
 
             for line in self.column_line:
-                cell_list = line.find_only_value()
-                for cell, only_value in cell_list:
-                    find = True
-                    cell.set_value(self, only_value)
-                    result = self.remove_possible_value(cell)
-                    if result == Cell.CONTRADICT:
-                        self.contradicted = True
-                        return
+                cell, only_value = line.find_only_value()
+                if cell is None:
+                    continue
+                # print(f'column line find ({cell.y}, {cell.x}) {only_value}')
+                find = True
+                cell.set_value(self, only_value)
+                result = self.remove_possible_value(cell)
+                if result == Cell.CONTRADICT:
+                    self.contradicted = True
+                    return
                 if self.finish():
                     return
 
             for jiugongge in self.jiugongge_list:
-                cell_list = jiugongge.find_only_value()
-                for cell, only_value in cell_list:
-                    find = True
-                    cell.set_value(self, only_value)
-                    result = self.remove_possible_value(cell)
-                    if result == Cell.CONTRADICT:
-                        self.contradicted = True
-                        return
+                cell, only_value = jiugongge.find_only_value()
+                if cell is None:
+                    continue
+                # print(f'jiugongge find ({cell.y}, {cell.x}) {only_value}')
+                find = True
+                cell.set_value(self, only_value)
+                result = self.remove_possible_value(cell)
+                if result == Cell.CONTRADICT:
+                    self.contradicted = True
+                    return
                 if self.finish():
                     return
 
@@ -313,7 +319,7 @@ if __name__ == '__main__':
 000009700
 '''
 
-    map = Sudoku(topic_hardest_2)
+    map = Sudoku(topic_hardest_1)
     print(map)
 
     if not map.check():

@@ -26,24 +26,19 @@ class Jiugongge:
         return result
 
     def find_only_value(self):
-        result = list()
         value_list = [0] * 10
+        result_cell_list = [None] * 10
         for cell in self.cell_list:
             if cell.value != 0:
                 continue
             for possible_value in cell.possible_value:
                 value_list[possible_value] += 1
+                result_cell_list[possible_value] = cell
 
         if 1 not in value_list:
-            return result
-        for i, count in enumerate(value_list):
-            if count != 1:
-                continue
-            for cell in self.cell_list:
-                if i in cell.possible_value:
-                    result.append((cell, i))
-                    break
-            break
-        return result
+            return None, None
+
+        i = value_list.index(1)
+        return result_cell_list[i], i
 
 
