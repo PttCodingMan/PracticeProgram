@@ -217,8 +217,9 @@ class Sudoku:
             for cell in cell_list:
                 if cell.value != 0:
                     continue
-                if len(cell.possible_value) < min_degree:
-                    min_degree = len(cell.possible_value)
+                possible_value_length = len(cell.possible_value)
+                if possible_value_length < min_degree:
+                    min_degree = possible_value_length
                     min_cell = cell
 
         for possible_value in min_cell.possible_value:
