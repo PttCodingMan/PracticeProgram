@@ -1,40 +1,35 @@
 import time
-import requests
-import urllib3
-
+import subprocess
+import platform
 from SingleLog.log import Logger
 
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+def ping_ip(current_ip_address):
+    try:
+        output = subprocess.check_output("ping -{} 1 {}".format('n' if platform.system().lower(
+        ) == "windows" else 'c', current_ip_address), shell=True, universal_newlines=True, timeout=1)
+        if 'unreachable' in output:
+            return False
+        else:
+            return True
+    except Exception:
+        return False
+
 
 logger = Logger('check_bot', Logger.INFO)
-
-first = True
 last_state = None
 while True:
-    if not first:
-        if last_state == 'error':
-            time.sleep(1)
-        else:
-            time.sleep(1)
-    else:
-        first = False
 
-    try:
-        r = requests.post('https://www.google.com', timeout=1.5)
-    except requests.exceptions.ConnectionError:
+    time.sleep(1)
+
+    if ping_ip('8.8.8.8'):
+        if last_state == 'ok':
+            continue
+        last_state = 'ok'
+        logger.show(Logger.INFO, '連線狀態', '正常')
+    else:
         if last_state == 'error':
             continue
         last_state = 'error'
         logger.show(Logger.INFO, '連線狀態', 'ConnectionError')
         continue
-    except requests.exceptions.ReadTimeout:
-        if last_state == 'error':
-            continue
-        last_state = 'error'
-        logger.show(Logger.INFO, '連線狀態', 'ReadTimeout')
-        continue
-
-    if last_state == 'ok':
-        continue
-    last_state = 'ok'
-    logger.show(Logger.INFO, '連線狀態', '正常')
