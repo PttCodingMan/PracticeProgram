@@ -16,13 +16,26 @@ def ping_ip(current_ip_address):
         return False
 
 
+def ping_all():
+    for ip in check_list:
+        if ping_ip(ip):
+            return True
+    return False
+
+
+check_list = [
+    '1.1.1.1',
+    '168.95.1.1',
+    '101.101.101.101'
+]
+
 logger = Logger('check_bot', Logger.INFO)
 last_state = None
 while True:
 
     time.sleep(1)
 
-    if ping_ip('8.8.8.8'):
+    if ping_all():
         if last_state == 'ok':
             continue
         last_state = 'ok'
