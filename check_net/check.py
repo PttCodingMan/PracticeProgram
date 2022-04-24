@@ -1,6 +1,7 @@
 import time
 import subprocess
 import platform
+
 from SingleLog.log import Logger
 
 
@@ -39,10 +40,10 @@ while True:
         if last_state == 'ok':
             continue
         last_state = 'ok'
-        logger.show(Logger.INFO, '連線狀態', '正常')
+        logger.info('連線狀態', '正常')
     else:
         if last_state == 'error':
             continue
         last_state = 'error'
-        logger.show(Logger.INFO, '連線狀態', 'ConnectionError')
+        logger.info('連線狀態', 'ConnectionError')
         continue
