@@ -2,7 +2,7 @@ import time
 import subprocess
 import platform
 
-from SingleLog.log import Logger
+from SingleLog import Logger
 
 
 def ping_ip(current_ip_address):
